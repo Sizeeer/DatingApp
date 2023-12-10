@@ -1,0 +1,17 @@
+{
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "target": "ESNEXT",
+    "module": "commonjs",
+    "allowJs": true,
+    "outDir": "./dist",
+    "strict": false,
+    "noImplicitThis": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

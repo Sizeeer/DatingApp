@@ -2,7 +2,7 @@ Arguments:
   /usr/local/bin/node /usr/local/bin/yarn dev
 
 PATH: 
-  /home/sizzzer/pegava/PegavaServer/pegava-express-server/node_modules/.bin:/tmp/yarn--1702220760967-0.11397441407992548:/home/sizzzer/pegava/PegavaServer/pegava-express-server/node_modules/.bin:/home/sizzzer/.config/yarn/link/node_modules/.bin:/home/sizzzer/.yarn/bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+  /home/sizzzer/pegava/PegavaServer/pegava-express-server/node_modules/.bin:/tmp/yarn--1702223226964-0.11457565631222977:/home/sizzzer/pegava/PegavaServer/pegava-express-server/node_modules/.bin:/home/sizzzer/.config/yarn/link/node_modules/.bin:/home/sizzzer/.yarn/bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
 
 Yarn version: 
   1.22.19

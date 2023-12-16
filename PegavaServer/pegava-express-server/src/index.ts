@@ -5,7 +5,6 @@ import express from "express";
 import cors from "cors";
 import exceptionHandler from "./middlewares/exceptionHandler";
 import "dotenv/config";
-import { models } from "./models";
 import usersRouter from "./components/user/user.routes";
 import authRouter from "./components/auth/auth.routes";
 
@@ -30,5 +29,5 @@ app.use(exceptionHandler);
 const server = http.createServer(app);
 
 server.listen(port, () => {
-  console.log("start server");
+  console.log("start server on port" + " " + port);
 });

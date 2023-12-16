@@ -4,4 +4,7 @@ export const loginSchema: Schema = {
   phone: {
     isString: true,
   },
+  oneTimeCode: {
+    isString: true,
+  },
 };

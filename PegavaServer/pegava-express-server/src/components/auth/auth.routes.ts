@@ -1,23 +1,61 @@
-import { Router } from "express";
+import { Response, Router } from "express";
 import { checkSchema } from "express-validator";
 import { loginSchema } from "./auth.schemas";
 import { validateBySchemaAndExtract } from "../../middlewares/validateBySchemaAndExtract";
 import { RequestWithValidatedData } from "../../middlewares/extractValidatedData";
+import { models } from "../../models";
+import { HTTP_STATUS_CODES } from "../../constants/httpStatusCodes";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
+const PREFIX = "/auth";
+
 type LoginValidatedData = {
   phone: string;
+  oneTimeCode: string;
 };
 
 router.post(
-  "/auth/login",
+  `${PREFIX}/check-one-time-code`,
   validateBySchemaAndExtract(loginSchema),
-  async (req: RequestWithValidatedData<LoginValidatedData>, res) => {
-    const { phone } = req.validatedData;
+  async (req: RequestWithValidatedData<LoginValidatedData>, res: Response) => {
+    console.log("324324", 324324);
+    //TODO: сделать хранение oneTimeCode в редисе для телефона если успеваит буду
+    const { phone, oneTimeCode } = req.validatedData;
 
-    console.log("phone", phone);
-    return res.json(1);
+    //TODO: проверку redis сделать
+    const isOneTimeCodeValid = true;
+
+    if (!isOneTimeCodeValid) {
+      return res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+        readyToRegister: false,
+      });
+    }
+
+    const currentUser = await models.User.findOne({
+      where: {
+        phone,
+      },
+    });
+
+    if (!currentUser) {
+      return res.json({
+        readyToRegister: true,
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: currentUser.id,
+        phone: currentUser.phone,
+      },
+      process.env.SECRET
+    );
+
+    return res.json({
+      jwt: token,
+    });
   }
 );
 

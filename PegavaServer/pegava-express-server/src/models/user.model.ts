@@ -8,6 +8,7 @@ export interface UserAttributes {
   bio: string;
   phone: string;
   geo: string;
+  sex: number;
   updatedAt: string;
   createdAt: string;
 }
@@ -28,6 +29,7 @@ export class User
   bio: string;
   phone: string;
   geo: string;
+  sex: number;
   readonly updatedAt: string;
   readonly createdAt: string;
 
@@ -67,6 +69,10 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
       },
       whoToShow: {
+        type: DataTypes.SMALLINT,
+        allowNull: false,
+      },
+      sex: {
         type: DataTypes.SMALLINT,
         allowNull: false,
       },

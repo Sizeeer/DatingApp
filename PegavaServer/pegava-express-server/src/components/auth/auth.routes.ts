@@ -20,7 +20,6 @@ router.post(
   `${PREFIX}/check-one-time-code`,
   validateBySchemaAndExtract(loginSchema),
   async (req: RequestWithValidatedData<LoginValidatedData>, res: Response) => {
-    console.log("324324", 324324);
     //TODO: сделать хранение oneTimeCode в редисе для телефона если успеваит буду
     const { phone, oneTimeCode } = req.validatedData;
 

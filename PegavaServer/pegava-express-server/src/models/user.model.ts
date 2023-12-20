@@ -7,7 +7,10 @@ export interface UserAttributes {
   whoToShow: number;
   bio: string;
   phone: string;
-  geo: string;
+  geo: {
+    type: "Point";
+    coordinates: [number, number];
+  };
   sex: number;
   updatedAt: string;
   createdAt: string;
@@ -28,7 +31,10 @@ export class User
   whoToShow: number;
   bio: string;
   phone: string;
-  geo: string;
+  geo: {
+    type: "Point";
+    coordinates: [number, number];
+  };
   sex: number;
   readonly updatedAt: string;
   readonly createdAt: string;
@@ -65,7 +71,7 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
       },
       geo: {
-        type: DataTypes.STRING,
+        type: DataTypes.GEOGRAPHY("POINT"),
         allowNull: false,
       },
       whoToShow: {

@@ -5,10 +5,15 @@ import multer from "multer";
 import { validateBySchemaAndExtract } from "../../middlewares/validateBySchemaAndExtract";
 import { RequestWithValidatedData } from "../../middlewares/extractValidatedData";
 import { models, sequelize } from "../../models";
+import { jwtAuth } from "../../middlewares/jwt";
 
 const router = Router();
 
 const PREFIX = "/users";
+
+router.get(`${PREFIX}/me`, jwtAuth, (req, res) => {
+  return res.json(res.locals.user);
+});
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -27,7 +32,10 @@ const upload = multer({ storage });
 type CreateUserValidatedData = {
   name: string;
   bio: string;
-  country: string;
+  geo: {
+    longitude: number;
+    latitude: number;
+  };
   sex: number;
   whoToShow: number;
   phone: string;
@@ -36,36 +44,11 @@ type CreateUserValidatedData = {
 router.post(
   PREFIX,
   upload.array("files"),
-  validateBySchemaAndExtract({
-    name: {
-      isString: true,
-      in: ["body"],
-    },
-    bio: {
-      isString: true,
-      in: ["body"],
-    },
-    sex: {
-      isInt: true,
-      toInt: true,
-      in: ["body"],
-    },
-    whoToShow: {
-      isInt: true,
-      toInt: true,
-      in: ["body"],
-    },
-    country: {
-      isString: true,
-      in: ["body"],
-    },
-    phone: {
-      isString: true,
-      in: ["body"],
-    },
-  }),
   async (req: RequestWithValidatedData<CreateUserValidatedData>, res) => {
-    const { name, bio, sex, whoToShow, country, phone } = req.validatedData;
+    // TODO: сделать схему валидации
+    const { name, bio, sex, whoToShow, geo, phone } =
+      req.body as CreateUserValidatedData;
+
     const files = req.files as any[];
 
     await sequelize.transaction(async (transaction) => {
@@ -73,7 +56,10 @@ router.post(
         {
           bio,
           firstName: name,
-          geo: country,
+          geo: {
+            type: "Point",
+            coordinates: [geo[0].longitude, geo[0].latitude],
+          },
           phone,
           whoToShow,
           sex,

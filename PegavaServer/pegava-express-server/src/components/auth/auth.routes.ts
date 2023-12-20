@@ -40,7 +40,7 @@ router.post(
 
     await oneTimeCodesRedisSource.upsert(phone, newOneTimeCode);
 
-    return res.json(newOneTimeCode);
+    return res.json(String(newOneTimeCode));
   }
 );
 
@@ -55,7 +55,7 @@ router.post(
     const isOneTimeCodeValid = savedOneTimeCode === oneTimeCode;
 
     if (!isOneTimeCodeValid) {
-      return res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
+      return res.json({
         readyToRegister: false,
       });
     }

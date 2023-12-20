@@ -1,11 +1,13 @@
 import { Response, Router } from "express";
-import { checkSchema } from "express-validator";
+import { Schema, checkSchema } from "express-validator";
 import { loginSchema } from "./auth.schemas";
 import { validateBySchemaAndExtract } from "../../middlewares/validateBySchemaAndExtract";
 import { RequestWithValidatedData } from "../../middlewares/extractValidatedData";
 import { models } from "../../models";
 import { HTTP_STATUS_CODES } from "../../constants/httpStatusCodes";
 import jwt from "jsonwebtoken";
+import { OneTimeCodeRedisSource } from "../../lib/redis/oneTimeCodeRedisSource";
+import { generateFourDigitsOtp } from "../../services/otp.service";
 
 const router = Router();
 
@@ -16,21 +18,49 @@ type LoginValidatedData = {
   oneTimeCode: string;
 };
 
+const oneTimeCodesRedisSource = OneTimeCodeRedisSource.getInstance();
+
+const sendOneTimeCodeSchema: Schema = {
+  phone: {
+    isString: true,
+  },
+};
+
+type SendOneTimeCodeValidatedData = {
+  phone: string;
+};
+
+router.post(
+  `${PREFIX}/send-one-time-code`,
+  validateBySchemaAndExtract(sendOneTimeCodeSchema),
+  async (req: RequestWithValidatedData<SendOneTimeCodeValidatedData>, res) => {
+    const { phone } = req.validatedData;
+
+    const newOneTimeCode = generateFourDigitsOtp();
+
+    await oneTimeCodesRedisSource.upsert(phone, newOneTimeCode);
+
+    return res.json(newOneTimeCode);
+  }
+);
+
 router.post(
   `${PREFIX}/check-one-time-code`,
   validateBySchemaAndExtract(loginSchema),
   async (req: RequestWithValidatedData<LoginValidatedData>, res: Response) => {
-    //TODO: сделать хранение oneTimeCode в редисе для телефона если успеваит буду
     const { phone, oneTimeCode } = req.validatedData;
 
-    //TODO: проверку redis сделать
-    const isOneTimeCodeValid = true;
+    const savedOneTimeCode = await oneTimeCodesRedisSource.getByKey(phone);
+
+    const isOneTimeCodeValid = savedOneTimeCode === oneTimeCode;
 
     if (!isOneTimeCodeValid) {
       return res.status(HTTP_STATUS_CODES.UNAUTHORIZED).json({
         readyToRegister: false,
       });
     }
+
+    await oneTimeCodesRedisSource.removeKey(phone);
 
     const currentUser = await models.User.findOne({
       where: {

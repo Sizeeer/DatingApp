@@ -19,11 +19,11 @@ export class Match
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  id: number;
-  seekerId: number;
-  pairId: number;
-  result: number;
-  readonly createdAt: string;
+  declare id: number;
+  declare seekerId: number;
+  declare pairId: number;
+  declare result: number;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     Match.belongsTo(models.User, { as: "seeker", foreignKey: "seekerId" });

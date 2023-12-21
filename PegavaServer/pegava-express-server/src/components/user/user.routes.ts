@@ -13,7 +13,17 @@ const router = Router();
 const PREFIX = "/users";
 
 router.get(`${PREFIX}/me`, jwtAuth, (req, res) => {
-  return res.json(res.locals.user);
+  const currentUser = res.locals.user;
+
+  return res.json({
+    ...currentUser.toJSON(),
+    avatars: currentUser.toJSON().avatars.map((avatar) => {
+      return {
+        ...avatar,
+        uri: `http://10.0.2.2:7654/${avatar.url}`,
+      };
+    }),
+  });
 });
 
 const storage = multer.diskStorage({
@@ -40,6 +50,7 @@ type CreateUserValidatedData = {
   sex: number;
   whoToShow: number;
   phone: string;
+  id: string | null;
 };
 
 router.post(
@@ -47,12 +58,13 @@ router.post(
   upload.array("files"),
   async (req: RequestWithValidatedData<CreateUserValidatedData>, res) => {
     // TODO: сделать схему валидации
-    const { name, bio, sex, whoToShow, geo, phone } =
+    const { name, bio, sex, whoToShow, geo, phone, id } =
       req.body as CreateUserValidatedData;
 
     const files = req.files as any[];
 
-    const createdUser = await models.User.create({
+    const [createdUser, created] = await models.User.upsert({
+      ...(id && { id: Number(id) }),
       bio,
       firstName: name,
       geo: {
@@ -64,20 +76,32 @@ router.post(
       sex,
     });
 
-    await models.Avatar.bulkCreate(
-      files.map((file) => ({
-        url: file.path,
-        userId: createdUser.toJSON().id,
-      }))
-    );
-
-    const token = jwt.sign(
-      {
-        id: createdUser.id,
-        phone: createdUser.phone,
+    await models.Avatar.destroy({
+      where: {
+        userId: createdUser.id,
       },
-      process.env.SECRET
-    );
+    });
+
+    if (files.length > 0) {
+      await models.Avatar.bulkCreate(
+        files.map((file) => ({
+          url: file.path,
+          userId: createdUser.id,
+        }))
+      );
+    }
+
+    let token = null;
+
+    if (created) {
+      token = jwt.sign(
+        {
+          id: createdUser.id,
+          phone: createdUser.phone,
+        },
+        process.env.SECRET
+      );
+    }
 
     return res.json({ jwt: token });
   }

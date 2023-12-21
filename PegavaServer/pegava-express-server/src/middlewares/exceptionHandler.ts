@@ -24,6 +24,7 @@ const exceptionHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   __: NextFunction
 ) => {
+  console.log("err", err);
   if (err) {
     res.status(err.statusCode || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
 

@@ -14,9 +14,9 @@ export class ReadedMessage
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  userId: number;
-  messageId: number;
-  readonly createdAt: string;
+  declare userId: number;
+  declare messageId: number;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     ReadedMessage.belongsTo(models.Message, {

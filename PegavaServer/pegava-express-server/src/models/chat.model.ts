@@ -16,8 +16,8 @@ export class Chat
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  id: number;
-  readonly createdAt: string;
+  declare id: number;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     Chat.hasMany(models.ChatMember, {

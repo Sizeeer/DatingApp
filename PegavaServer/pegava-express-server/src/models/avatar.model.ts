@@ -19,11 +19,11 @@ export class Avatar
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  id: number;
-  url: string;
-  userId: number;
-  readonly updatedAt: string;
-  readonly createdAt: string;
+  declare id: number;
+  declare url: string;
+  declare userId: number;
+  declare readonly updatedAt: string;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     Avatar.belongsTo(models.User, { as: "user", foreignKey: "userId" });

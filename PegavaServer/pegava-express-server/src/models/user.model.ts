@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Models } from ".";
+import { Avatar } from "./avatar.model";
 
 export interface UserAttributes {
   id: number;
@@ -38,6 +39,8 @@ export class User
   declare sex: number;
   declare readonly updatedAt: string;
   declare readonly createdAt: string;
+
+  declare avatars?: Avatar[];
 
   static associate(models: Models) {
     User.hasMany(models.Avatar, {

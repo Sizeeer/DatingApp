@@ -19,11 +19,11 @@ export class ChatMember
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  id: number;
-  chatId: number;
-  userId: number;
-  readonly updatedAt: string;
-  readonly createdAt: string;
+  declare id: number;
+  declare chatId: number;
+  declare userId: number;
+  declare readonly updatedAt: string;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     ChatMember.belongsTo(models.Chat, { foreignKey: "chatId", as: "chat" });

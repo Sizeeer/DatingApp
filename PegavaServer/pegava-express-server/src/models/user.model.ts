@@ -26,18 +26,18 @@ export class User
   // https://sequelize.org/master/manual/typescript.html
   public static associations: {};
 
-  id: number;
-  firstName: string;
-  whoToShow: number;
-  bio: string;
-  phone: string;
-  geo: {
+  declare id: number;
+  declare firstName: string;
+  declare whoToShow: number;
+  declare bio: string;
+  declare phone: string;
+  declare geo: {
     type: "Point";
     coordinates: [number, number];
   };
-  sex: number;
-  readonly updatedAt: string;
-  readonly createdAt: string;
+  declare sex: number;
+  declare readonly updatedAt: string;
+  declare readonly createdAt: string;
 
   static associate(models: Models) {
     User.hasMany(models.Avatar, {

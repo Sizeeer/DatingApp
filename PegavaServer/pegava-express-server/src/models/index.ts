@@ -61,6 +61,6 @@ const models: Models = {};
 // @ts-ignore Потому что ради одного раза не буду расширять тайпинги
 Object.values(models).forEach((mdl) => mdl?.associate?.(models));
 
-sequelize.sync({ force: true });
+sequelize.sync();
 
 export { models, sequelize, Sequelize };

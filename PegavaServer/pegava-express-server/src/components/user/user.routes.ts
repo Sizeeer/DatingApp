@@ -6,6 +6,7 @@ import { validateBySchemaAndExtract } from "../../middlewares/validateBySchemaAn
 import { RequestWithValidatedData } from "../../middlewares/extractValidatedData";
 import { models, sequelize } from "../../models";
 import { jwtAuth } from "../../middlewares/jwt";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -51,37 +52,34 @@ router.post(
 
     const files = req.files as any[];
 
-    await sequelize.transaction(async (transaction) => {
-      const createdUser = await models.User.create(
-        {
-          bio,
-          firstName: name,
-          geo: {
-            type: "Point",
-            coordinates: [geo[0].longitude, geo[0].latitude],
-          },
-          phone,
-          whoToShow,
-          sex,
-        },
-        {
-          transaction,
-          returning: true,
-        }
-      );
-
-      await models.Avatar.bulkCreate(
-        files.map((file) => ({
-          url: file.path,
-          userId: createdUser.toJSON().id,
-        })),
-        {
-          transaction,
-        }
-      );
-
-      res.json(createdUser);
+    const createdUser = await models.User.create({
+      bio,
+      firstName: name,
+      geo: {
+        type: "Point",
+        coordinates: [geo[0].longitude, geo[0].latitude],
+      },
+      phone,
+      whoToShow,
+      sex,
     });
+
+    await models.Avatar.bulkCreate(
+      files.map((file) => ({
+        url: file.path,
+        userId: createdUser.toJSON().id,
+      }))
+    );
+
+    const token = jwt.sign(
+      {
+        id: createdUser.id,
+        phone: createdUser.phone,
+      },
+      process.env.SECRET
+    );
+
+    return res.json({ jwt: token });
   }
 );
 

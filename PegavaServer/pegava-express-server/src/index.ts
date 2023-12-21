@@ -7,6 +7,7 @@ import exceptionHandler from "./middlewares/exceptionHandler";
 import "dotenv/config";
 import usersRouter from "./components/user/user.routes";
 import authRouter from "./components/auth/auth.routes";
+import ngrok from "@ngrok/ngrok";
 
 const port = process.env.PORT || 7654;
 
@@ -31,4 +32,14 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
   console.log("start server on port" + " " + port);
+
+  // (async () => {
+  //   const listener = await ngrok.forward({
+  //     proto: "http",
+  //     addr: port,
+  //     authtoken: "process.env.NGROK_AUTHTOKEN",
+  //   });
+
+  //   console.log("url", listener.url());
+  // })();
 });

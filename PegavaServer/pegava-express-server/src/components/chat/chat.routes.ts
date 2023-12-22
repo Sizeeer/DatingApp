@@ -154,12 +154,14 @@ router.get(
       ],
     });
 
-    const resultMessage = messages.map((message) => ({
-      _id: message.id,
-      message: message.content,
-      createdAt: message.createdAt,
-      self: message.authorId === res.locals.user.id,
-    }));
+    const resultMessage = messages
+      .map((message) => ({
+        _id: message.id,
+        message: message.content,
+        createdAt: message.createdAt,
+        self: message.authorId === res.locals.user.id,
+      }))
+      .reverse();
 
     return res.json(resultMessage);
   }

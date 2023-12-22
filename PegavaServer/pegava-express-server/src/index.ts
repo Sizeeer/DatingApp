@@ -10,6 +10,8 @@ import authRouter from "./components/auth/auth.routes";
 import chatRouter from "./components/chat/chat.routes";
 import ngrok from "@ngrok/ngrok";
 import path from "path";
+import { models } from "./models";
+import { initSocket } from "./services/socket.service";
 
 const port = process.env.PORT || 7654;
 
@@ -47,3 +49,5 @@ server.listen(port, () => {
   //   console.log("url", listener.url());
   // })();
 });
+
+initSocket(server);

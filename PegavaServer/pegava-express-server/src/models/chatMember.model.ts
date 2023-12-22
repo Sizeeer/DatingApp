@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Models } from ".";
+import { User } from "./user.model";
 
 export interface ChatMemberAttributes {
   id: number;
@@ -25,8 +26,15 @@ export class ChatMember
   declare readonly updatedAt: string;
   declare readonly createdAt: string;
 
+  declare user?: User;
+
   static associate(models: Models) {
     ChatMember.belongsTo(models.Chat, { foreignKey: "chatId", as: "chat" });
+
+    ChatMember.belongsTo(models.User, {
+      foreignKey: "userId",
+      as: "user",
+    });
   }
 }
 

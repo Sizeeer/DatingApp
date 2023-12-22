@@ -7,6 +7,10 @@ export const jwtAuth = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
 
+    if (!token) {
+      throw new Error("Токен не передан");
+    }
+
     const { id } = jwt.verify(token, process.env.SECRET) as {
       id: number;
     };

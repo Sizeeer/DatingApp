@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Models } from ".";
 
+//TODO: сделать смену приоритета аватарки если успею
+
 export interface AvatarAttributes {
   id: number;
   url: string;
@@ -42,6 +44,7 @@ export default (sequelize: Sequelize) => {
       userId: {
         type: DataTypes.INTEGER,
       },
+
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },
